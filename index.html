@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#1a1410">
 <title>Kalorický denník</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/zxing-js/0.20.0/zxing.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Segoe UI', sans-serif; background: #1a1410; color: #F2E8DC; min-height: 100vh; padding: 20px; max-width: 420px; margin: 0 auto; }
@@ -51,7 +51,6 @@
   .search-icon { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: #B89A6A; font-size: 1rem; pointer-events: none; }
   .search-spinner { position: absolute; right: 12px; top: 50%; width: 16px; height: 16px; border: 2px solid #B89A6A44; border-top-color: #B89A6A; border-radius: 50%; animation: spin 0.7s linear infinite; display: none; margin-top: -8px; }
   @keyframes spin { to { transform: rotate(360deg); } }
-
   .search-results { background: #1e1a14; border: 1px solid #B89A6A44; border-radius: 10px; margin-bottom: 8px; overflow: hidden; display: none; max-height: 260px; overflow-y: auto; }
   .search-results.visible { display: block; }
   .search-result-item { padding: 10px 14px; cursor: pointer; border-bottom: 1px solid #B89A6A22; transition: background 0.15s; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
@@ -78,24 +77,19 @@
   .add-btn:hover { opacity: 0.88; }
   .add-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
-  /* Barcode scanner */
-  .scanner-wrap { position: relative; margin-bottom: 10px; border-radius: 12px; overflow: hidden; background: #000; display: none; }
-  .scanner-wrap.visible { display: block; }
-  #scannerVideo { width: 100%; display: block; border-radius: 12px; max-height: 220px; object-fit: cover; }
-  .scanner-overlay { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: none; }
-  .scanner-line { width: 70%; height: 2px; background: #B89A6A; box-shadow: 0 0 8px #B89A6Aaa; animation: scanline 2s ease-in-out infinite; }
-  @keyframes scanline { 0%,100% { transform: translateY(-40px); opacity: 0.5; } 50% { transform: translateY(40px); opacity: 1; } }
-  .scanner-corners { position: absolute; inset: 12px; border-radius: 8px; }
-  .scanner-corners::before, .scanner-corners::after { content: ''; position: absolute; width: 20px; height: 20px; border-color: #B89A6A; border-style: solid; }
-  .scanner-corners::before { top: 0; left: 0; border-width: 3px 0 0 3px; }
-  .scanner-corners::after { bottom: 0; right: 0; border-width: 0 3px 3px 0; }
-  .scanner-status { position: absolute; bottom: 8px; left: 0; right: 0; text-align: center; font-size: 0.78rem; color: #F2E8DCaa; background: #00000066; padding: 4px; }
-
+  /* Barcode */
   .scan-btn { width: 100%; background: #1a1410; border: 1px solid #B89A6A; border-radius: 10px; color: #B89A6A; font-size: 0.9rem; font-weight: 600; padding: 10px; cursor: pointer; margin-bottom: 8px; transition: background 0.2s; display: flex; align-items: center; justify-content: center; gap: 6px; }
   .scan-btn:hover { background: #2a2018; }
   .scan-btn.scanning { background: #B89A6A22; }
 
-  .barcode-status { font-size: 0.82rem; color: #F2E8DC88; text-align: center; margin-bottom: 8px; min-height: 20px; }
+  #qr-reader { border-radius: 12px; overflow: hidden; margin-bottom: 8px; display: none; }
+  #qr-reader.visible { display: block; }
+  /* Override html5-qrcode default styles */
+  #qr-reader > div { border-radius: 12px !important; }
+  #qr-reader img { display: none !important; }
+  #qr-reader video { border-radius: 10px; }
+
+  .barcode-status { font-size: 0.82rem; text-align: center; margin-bottom: 8px; min-height: 20px; color: #F2E8DC88; }
   .barcode-status.success { color: #8ecf8e; }
   .barcode-status.error { color: #D4879A; }
   .barcode-status.loading { color: #B89A6A; }
@@ -175,18 +169,8 @@
     <button class="scan-btn" id="scanToggleBtn" onclick="toggleScanner()">
       <span>📷</span> <span id="scanBtnText">Spustiť kameru</span>
     </button>
-
-    <div class="scanner-wrap" id="scannerWrap">
-      <video id="scannerVideo" autoplay muted playsinline></video>
-      <div class="scanner-overlay">
-        <div class="scanner-corners"></div>
-        <div class="scanner-line"></div>
-        <div class="scanner-status">Namieriť kameru na čiarový kód</div>
-      </div>
-    </div>
-
+    <div id="qr-reader"></div>
     <div class="barcode-status" id="barcodeStatus"></div>
-
     <div class="gram-row" id="gramRowBarcode">
       <div style="flex:1;min-width:0;">
         <div class="gram-row-label" id="gramLabelBarcode">Produkt</div>
@@ -196,7 +180,6 @@
       <span>g</span>
       <span class="gram-kcal-preview" id="gramPreviewBarcode">—</span>
     </div>
-
     <button class="add-btn" id="addBarcodeBtn" onclick="addFromBarcode()" disabled>+ Pridať</button>
   </div>
 
@@ -247,18 +230,17 @@
 </div>
 
 <script>
-  // ─── State ────────────────────────────────────────────────────
   let currentDate = new Date();
   let selectedMeal = 'Raňajky';
   let goal = parseInt(localStorage.getItem('kcal_goal') || '2000');
   let searchTimeout = null;
   let selectedProduct = null;
   let selectedBarcodeProduct = null;
+  let html5QrCode = null;
   let scannerActive = false;
-  let codeReader = null;
-  let scanControls = null;
+  let lastScanned = null;
 
-  // ─── Date helpers ─────────────────────────────────────────────
+  // ─── Date ─────────────────────────────────────────────────────
   function dateKey(d) { return d.toISOString().slice(0, 10); }
   function getEntries(d) { const r = localStorage.getItem('entries_' + dateKey(d)); return r ? JSON.parse(r) : []; }
   function saveEntries(d, e) { localStorage.setItem('entries_' + dateKey(d), JSON.stringify(e)); }
@@ -285,10 +267,10 @@
     document.getElementById('tab-' + tab).classList.add('active');
   }
 
-  // ─── Barcode scanner ──────────────────────────────────────────
+  // ─── Barcode ──────────────────────────────────────────────────
   async function toggleScanner() {
     if (scannerActive) {
-      stopScanner();
+      await stopScanner();
     } else {
       await startScanner();
     }
@@ -296,7 +278,7 @@
 
   async function startScanner() {
     const statusEl = document.getElementById('barcodeStatus');
-    const wrap = document.getElementById('scannerWrap');
+    const readerEl = document.getElementById('qr-reader');
     const btn = document.getElementById('scanToggleBtn');
     const btnText = document.getElementById('scanBtnText');
 
@@ -304,59 +286,61 @@
     statusEl.className = 'barcode-status loading';
 
     try {
-      // Use ZXing from CDN
-      if (typeof ZXing === 'undefined') {
-        statusEl.textContent = 'Knižnica sa načítava, skús znova za chvíľu.';
-        statusEl.className = 'barcode-status error';
-        return;
-      }
-
-      codeReader = new ZXing.BrowserMultiFormatReader();
-      const videoEl = document.getElementById('scannerVideo');
-
-      wrap.classList.add('visible');
+      html5QrCode = new Html5Qrcode('qr-reader');
+      readerEl.classList.add('visible');
       btn.classList.add('scanning');
       btnText.textContent = 'Zastaviť kameru';
       scannerActive = true;
+      lastScanned = null;
 
-      scanControls = await codeReader.decodeFromConstraints(
-        { video: { facingMode: 'environment' } },
-        videoEl,
-        (result, err) => {
-          if (result) {
-            const barcode = result.getText();
-            stopScanner();
-            lookupBarcode(barcode);
-          }
-        }
+      await html5QrCode.start(
+        { facingMode: 'environment' },
+        {
+          fps: 10,
+          qrbox: { width: 250, height: 120 },
+          aspectRatio: 1.5,
+          formatsToSupport: [
+            Html5QrcodeSupportedFormats.EAN_13,
+            Html5QrcodeSupportedFormats.EAN_8,
+            Html5QrcodeSupportedFormats.CODE_128,
+            Html5QrcodeSupportedFormats.CODE_39,
+            Html5QrcodeSupportedFormats.UPC_A,
+            Html5QrcodeSupportedFormats.UPC_E,
+          ]
+        },
+        async (decodedText) => {
+          if (decodedText === lastScanned) return;
+          lastScanned = decodedText;
+          await stopScanner();
+          await lookupBarcode(decodedText);
+        },
+        () => {} // ignore errors during scanning
       );
 
-      statusEl.textContent = 'Namieriť na čiarový kód...';
+      statusEl.textContent = 'Namieriť na čiarový kód produktu';
       statusEl.className = 'barcode-status';
 
     } catch (e) {
       scannerActive = false;
-      wrap.classList.remove('visible');
+      readerEl.classList.remove('visible');
       btn.classList.remove('scanning');
       btnText.textContent = 'Spustiť kameru';
-      if (e.name === 'NotAllowedError') {
+      if (e.toString().includes('NotAllowed') || e.toString().includes('Permission')) {
         statusEl.textContent = '⚠️ Prístup ku kamere zamietnutý. Povoľ kameru v nastaveniach prehliadača.';
       } else {
-        statusEl.textContent = '⚠️ Kamera nie je dostupná: ' + e.message;
+        statusEl.textContent = '⚠️ Kamera nie je dostupná. Skús záložku Hľadať.';
       }
       statusEl.className = 'barcode-status error';
     }
   }
 
-  function stopScanner() {
-    if (scanControls) { try { scanControls.stop(); } catch(e){} scanControls = null; }
-    if (codeReader) { try { codeReader.reset(); } catch(e){} codeReader = null; }
-    const videoEl = document.getElementById('scannerVideo');
-    if (videoEl && videoEl.srcObject) {
-      videoEl.srcObject.getTracks().forEach(t => t.stop());
-      videoEl.srcObject = null;
+  async function stopScanner() {
+    if (html5QrCode && scannerActive) {
+      try { await html5QrCode.stop(); } catch(e) {}
+      try { html5QrCode.clear(); } catch(e) {}
+      html5QrCode = null;
     }
-    document.getElementById('scannerWrap').classList.remove('visible');
+    document.getElementById('qr-reader').classList.remove('visible');
     document.getElementById('scanToggleBtn').classList.remove('scanning');
     document.getElementById('scanBtnText').textContent = 'Spustiť kameru';
     scannerActive = false;
@@ -364,16 +348,15 @@
 
   async function lookupBarcode(barcode) {
     const statusEl = document.getElementById('barcodeStatus');
-    statusEl.textContent = `🔍 Hľadám kód ${barcode}...`;
+    statusEl.textContent = `🔍 Hľadám produkt...`;
     statusEl.className = 'barcode-status loading';
 
     try {
-      const url = `https://world.openfoodfacts.org/api/v0/product/${barcode}.json`;
-      const res = await fetch(url);
+      const res = await fetch(`https://world.openfoodfacts.org/api/v0/product/${barcode}.json`);
       const data = await res.json();
 
       if (data.status !== 1 || !data.product) {
-        statusEl.textContent = `❌ Produkt s kódom ${barcode} nebol nájdený.`;
+        statusEl.textContent = `❌ Produkt nebol nájdený v databáze.`;
         statusEl.className = 'barcode-status error';
         return;
       }
@@ -381,17 +364,17 @@
       const p = data.product;
       const n = p.nutriments || {};
       const kcal100 = Math.round(n['energy-kcal_100g'] || n['energy-kcal'] || 0);
-      const name = p.product_name || p.product_name_sk || p.product_name_cs || 'Neznámy produkt';
+      const name = p.product_name_sk || p.product_name_cs || p.product_name || 'Neznámy produkt';
       const brand = p.brands ? p.brands.split(',')[0].trim() : '';
 
       if (!kcal100) {
-        statusEl.textContent = `⚠️ Produkt "${name}" bol nájdený, ale nemá údaje o kalóriách.`;
+        statusEl.textContent = `⚠️ "${name}" nemá údaje o kalóriách v databáze.`;
         statusEl.className = 'barcode-status error';
         return;
       }
 
       selectedBarcodeProduct = { name, brand, kcalPer100: kcal100 };
-      statusEl.textContent = `✅ Nájdené: ${name}${brand ? ' (' + brand + ')' : ''}`;
+      statusEl.textContent = `✅ ${name}${brand ? ' · ' + brand : ''}`;
       statusEl.className = 'barcode-status success';
 
       document.getElementById('gramLabelBarcode').textContent = name + (brand ? ` (${brand})` : '');
@@ -402,7 +385,7 @@
       updateGramPreviewBarcode();
 
     } catch (e) {
-      statusEl.textContent = '❌ Chyba pri hľadaní produktu.';
+      statusEl.textContent = '❌ Chyba pripojenia. Skontroluj internet.';
       statusEl.className = 'barcode-status error';
     }
   }
@@ -421,11 +404,11 @@
     const entries = getEntries(currentDate);
     entries.push({ id: Date.now(), meal: selectedMeal, name: selectedBarcodeProduct.name, sub: `${g} g`, kcal });
     saveEntries(currentDate, entries);
-    // reset
     selectedBarcodeProduct = null;
+    lastScanned = null;
     document.getElementById('gramRowBarcode').classList.remove('visible');
     document.getElementById('addBarcodeBtn').disabled = true;
-    document.getElementById('barcodeStatus').textContent = '✅ Pridané!';
+    document.getElementById('barcodeStatus').textContent = '✅ Pridané do denníka!';
     document.getElementById('barcodeStatus').className = 'barcode-status success';
     setTimeout(() => { document.getElementById('barcodeStatus').textContent = ''; }, 2000);
     render();
@@ -471,7 +454,8 @@
       const kcal100 = Math.round(p.nutriments['energy-kcal_100g']);
       const name = p.product_name || 'Neznámy produkt';
       const brand = p.brands ? p.brands.split(',')[0].trim() : '';
-      const ne = name.replace(/'/g, "\\'"), be = brand.replace(/'/g, "\\'");
+      const ne = name.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+      const be = brand.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
       return `<div class="search-result-item" onclick="selectProduct('${ne}','${be}',${kcal100})">
         <div style="flex:1;min-width:0;"><div class="result-name">${name}</div>${brand ? `<div class="result-brand">${brand}</div>` : ''}</div>
         <div style="text-align:right;flex-shrink:0;"><div class="result-kcal">${kcal100}</div><div class="result-kcal-sub">kcal/100g</div></div>
@@ -542,7 +526,6 @@
     const pct = Math.min((total / goal) * 100, 100);
     document.getElementById('progressBar').style.width = pct + '%';
     document.getElementById('progressBar').style.background = pct > 100 ? '#D4879A' : 'linear-gradient(90deg, #B89A6A, #c8aa7a)';
-
     const mealOrder = ['Raňajky', 'Obed', 'Večera', 'Snack'];
     const grouped = {}; mealOrder.forEach(m => { grouped[m] = []; });
     entries.forEach(e => { if (grouped[e.meal]) grouped[e.meal].push(e); });
