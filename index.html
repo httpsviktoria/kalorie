@@ -12,8 +12,7 @@
   h1 { font-size: 1.4rem; color: #B89A6A; text-align: center; margin-bottom: 4px; letter-spacing: 1px; }
 
   .date-nav { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 20px; margin-top: 8px; }
-  .date-nav button { background: none; border: none; color: #B89A6A; font-size: 1.3rem; cursor: pointer; padding: 4px 10px; border-radius: 6px; transition: background 0.2s; }
-  .date-nav button:hover { background: #2a2018; }
+  .date-nav button { background: none; border: none; color: #B89A6A; font-size: 1.3rem; cursor: pointer; padding: 4px 10px; border-radius: 6px; }
   .date-label { font-size: 0.95rem; color: #F2E8DC; min-width: 140px; text-align: center; }
 
   .summary-card { background: #2a2018; border: 1px solid #B89A6A44; border-radius: 16px; padding: 18px 20px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; }
@@ -23,9 +22,22 @@
   .goal-info { text-align: right; font-size: 0.8rem; color: #F2E8DC99; }
   .goal-info span { display: block; color: #F2E8DC; font-size: 1rem; font-weight: 600; }
 
-  .progress-bar-wrap { background: #3a3028; border-radius: 8px; height: 10px; margin-bottom: 20px; overflow: hidden; }
+  .progress-bar-wrap { background: #3a3028; border-radius: 8px; height: 10px; margin-bottom: 6px; overflow: hidden; }
   .progress-bar { height: 100%; border-radius: 8px; background: linear-gradient(90deg, #B89A6A, #D4879A); transition: width 0.4s ease; }
 
+  .goal-edit { text-align: center; margin-bottom: 20px; }
+  .goal-edit button { background: none; border: none; color: #B89A6A88; font-size: 0.78rem; cursor: pointer; text-decoration: underline; }
+
+  /* ── WEEKLY CHART ── */
+  .chart-section { background: #2a2018; border: 1px solid #B89A6A44; border-radius: 16px; padding: 16px; margin-bottom: 20px; }
+  .chart-title { font-size: 0.85rem; color: #B89A6A; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 14px; }
+  .chart-wrap { width: 100%; position: relative; }
+  .chart-wrap svg { width: 100%; display: block; }
+  .chart-legend { display: flex; gap: 16px; margin-top: 10px; justify-content: center; }
+  .legend-item { display: flex; align-items: center; gap: 5px; font-size: 0.75rem; color: #F2E8DC88; }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+  /* ── ADD SECTION ── */
   .add-section { background: #2a2018; border: 1px solid #B89A6A44; border-radius: 16px; padding: 16px; margin-bottom: 20px; }
   .add-section h2 { font-size: 0.85rem; color: #B89A6A; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px; }
 
@@ -43,7 +55,6 @@
   .tab-panel { display: none; }
   .tab-panel.active { display: block; }
 
-  /* Search */
   .search-wrap { position: relative; margin-bottom: 8px; }
   .search-input { width: 100%; background: #1a1410; border: 1px solid #B89A6A55; border-radius: 10px; color: #F2E8DC; padding: 10px 40px 10px 12px; font-size: 0.95rem; outline: none; transition: border-color 0.2s; }
   .search-input:focus { border-color: #B89A6A; }
@@ -77,24 +88,16 @@
   .add-btn:hover { opacity: 0.88; }
   .add-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
-  /* Barcode */
   .scan-btn { width: 100%; background: #1a1410; border: 1px solid #B89A6A; border-radius: 10px; color: #B89A6A; font-size: 0.9rem; font-weight: 600; padding: 10px; cursor: pointer; margin-bottom: 8px; transition: background 0.2s; display: flex; align-items: center; justify-content: center; gap: 6px; }
   .scan-btn:hover { background: #2a2018; }
   .scan-btn.scanning { background: #B89A6A22; }
-
   #qr-reader { border-radius: 12px; overflow: hidden; margin-bottom: 8px; display: none; }
   #qr-reader.visible { display: block; }
-  /* Override html5-qrcode default styles */
-  #qr-reader > div { border-radius: 12px !important; }
-  #qr-reader img { display: none !important; }
-  #qr-reader video { border-radius: 10px; }
-
   .barcode-status { font-size: 0.82rem; text-align: center; margin-bottom: 8px; min-height: 20px; color: #F2E8DC88; }
   .barcode-status.success { color: #8ecf8e; }
   .barcode-status.error { color: #D4879A; }
   .barcode-status.loading { color: #B89A6A; }
 
-  /* Entries */
   .entries-section h2 { font-size: 0.85rem; color: #B89A6A; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
   .meal-group { margin-bottom: 14px; }
   .meal-group-title { font-size: 0.75rem; color: #F2E8DC66; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; padding-left: 4px; }
@@ -106,9 +109,6 @@
   .delete-btn:hover { color: #D4879A; }
   .empty-msg { text-align: center; color: #F2E8DC44; font-size: 0.9rem; padding: 20px 0; }
 
-  .goal-edit { text-align: center; margin-top: -12px; margin-bottom: 16px; }
-  .goal-edit button { background: none; border: none; color: #B89A6A88; font-size: 0.78rem; cursor: pointer; text-decoration: underline; }
-
   .modal-overlay { display: none; position: fixed; inset: 0; background: #000000aa; z-index: 100; align-items: center; justify-content: center; }
   .modal-overlay.open { display: flex; }
   .modal { background: #2a2018; border: 1px solid #B89A6A55; border-radius: 16px; padding: 24px; width: 300px; text-align: center; }
@@ -118,6 +118,9 @@
   .modal-btns button { flex: 1; padding: 10px; border-radius: 10px; border: none; cursor: pointer; font-weight: 600; }
   .modal-btns .confirm { background: #B89A6A; color: #1a1410; }
   .modal-btns .cancel { background: #3a3028; color: #F2E8DC; }
+
+  /* Tooltip */
+  .chart-tooltip { position: absolute; background: #3a3028; border: 1px solid #B89A6A66; border-radius: 8px; padding: 6px 10px; font-size: 0.78rem; color: #F2E8DC; pointer-events: none; white-space: nowrap; display: none; z-index: 10; }
 </style>
 </head>
 <body>
@@ -140,31 +143,43 @@
   </div>
 </div>
 
+<div class="progress-bar-wrap">
+  <div class="progress-bar" id="progressBar" style="width:0%"></div>
+</div>
 <div class="goal-edit">
   <button onclick="openGoalModal()">✏️ Zmeniť denný cieľ (<span id="goalDisplay">2000</span> kcal)</button>
 </div>
 
-<div class="progress-bar-wrap">
-  <div class="progress-bar" id="progressBar" style="width:0%"></div>
+<!-- WEEKLY CHART -->
+<div class="chart-section">
+  <div class="chart-title">📊 Posledných 7 dní</div>
+  <div class="chart-wrap" id="chartWrap">
+    <svg id="weekChart" viewBox="0 0 360 160" preserveAspectRatio="xMidYMid meet"></svg>
+    <div class="chart-tooltip" id="chartTooltip"></div>
+  </div>
+  <div class="chart-legend">
+    <div class="legend-item"><div class="legend-dot" style="background:#B89A6A"></div>pod cieľom</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#D4879A"></div>nad cieľom</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#B89A6A55;border:1px dashed #B89A6A"></div>cieľ</div>
+  </div>
 </div>
 
+<!-- ADD SECTION -->
 <div class="add-section">
   <h2>Pridať jedlo</h2>
-
   <div class="meal-type-row">
     <button class="meal-btn active" onclick="selectMeal('Raňajky', this)">🌅 Raňajky</button>
     <button class="meal-btn" onclick="selectMeal('Obed', this)">☀️ Obed</button>
     <button class="meal-btn" onclick="selectMeal('Večera', this)">🌙 Večera</button>
     <button class="meal-btn" onclick="selectMeal('Snack', this)">🍎 Snack</button>
   </div>
-
   <div class="tabs">
     <button class="tab-btn active" onclick="switchTab('barcode', this)">📷 Odfotiť</button>
     <button class="tab-btn" onclick="switchTab('search', this)">🔍 Hľadať</button>
     <button class="tab-btn" onclick="switchTab('manual', this)">✏️ Ručne</button>
   </div>
 
-  <!-- BARCODE TAB -->
+  <!-- BARCODE -->
   <div class="tab-panel active" id="tab-barcode">
     <button class="scan-btn" id="scanToggleBtn" onclick="toggleScanner()">
       <span>📷</span> <span id="scanBtnText">Spustiť kameru</span>
@@ -183,7 +198,7 @@
     <button class="add-btn" id="addBarcodeBtn" onclick="addFromBarcode()" disabled>+ Pridať</button>
   </div>
 
-  <!-- SEARCH TAB -->
+  <!-- SEARCH -->
   <div class="tab-panel" id="tab-search">
     <div class="search-wrap">
       <input class="search-input" type="text" id="searchInput" placeholder="Napr. jogurt, chlieb, jablko..." oninput="onSearchInput()" />
@@ -203,11 +218,26 @@
     <button class="add-btn" id="addSearchBtn" onclick="addFromSearch()" disabled>+ Pridať</button>
   </div>
 
-  <!-- MANUAL TAB -->
+  <!-- MANUAL -->
   <div class="tab-panel" id="tab-manual">
-    <div class="input-row">
-      <input type="text" id="foodName" placeholder="Názov jedla" />
-      <input type="number" id="foodKcal" placeholder="kcal" min="0" />
+    <!-- Riadok 1: Názov + kcal -->
+    <div style="display:flex;gap:8px;margin-bottom:8px;">
+      <input type="text" id="foodName" placeholder="Názov jedla" style="flex:2;min-width:0;" />
+      <input type="number" id="foodKcal" placeholder="kcal/ks" min="0" style="flex:1;min-width:0;" oninput="updateManualPreview()" />
+    </div>
+    <!-- Riadok 2: Množstvo + jednotka + preview -->
+    <div style="display:flex;gap:8px;margin-bottom:10px;align-items:center;">
+      <input type="number" id="foodQty" placeholder="Počet" min="0.1" step="0.1" value="1" style="flex:1;min-width:0;" oninput="updateManualPreview()" />
+      <select id="foodUnit" onchange="updateManualPreview()" style="flex:1.4;min-width:0;background:#1a1410;border:1px solid #B89A6A55;border-radius:10px;color:#F2E8DC;padding:10px 6px;font-size:0.85rem;outline:none;">
+        <option value="ks">ks</option>
+        <option value="g">g</option>
+        <option value="ml">ml</option>
+        <option value="lyžica">lyžica</option>
+        <option value="lyžička">lyžička</option>
+        <option value="šálka">šálka</option>
+        <option value="porcia">porcia</option>
+      </select>
+      <div style="flex:1;min-width:0;background:#1a1410;border:1px solid #B89A6A55;border-radius:10px;padding:10px 8px;text-align:center;font-size:0.85rem;color:#B89A6A;font-weight:600;" id="manualPreview">—</div>
     </div>
     <button class="add-btn" onclick="addManual()">+ Pridať</button>
   </div>
@@ -240,10 +270,12 @@
   let scannerActive = false;
   let lastScanned = null;
 
-  // ─── Date ─────────────────────────────────────────────────────
+  // ─── Helpers ──────────────────────────────────────────────────
   function dateKey(d) { return d.toISOString().slice(0, 10); }
   function getEntries(d) { const r = localStorage.getItem('entries_' + dateKey(d)); return r ? JSON.parse(r) : []; }
   function saveEntries(d, e) { localStorage.setItem('entries_' + dateKey(d), JSON.stringify(e)); }
+  function getDayTotal(d) { return getEntries(d).reduce((s, e) => s + e.kcal, 0); }
+
   function formatDate(d) {
     const today = new Date(), yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
@@ -251,6 +283,7 @@
     if (dateKey(d) === dateKey(yesterday)) return 'Včera, ' + d.toLocaleDateString('sk-SK', { day: 'numeric', month: 'long' });
     return d.toLocaleDateString('sk-SK', { weekday: 'short', day: 'numeric', month: 'long' });
   }
+
   function changeDate(delta) { currentDate.setDate(currentDate.getDate() + delta); render(); }
   function selectMeal(name, btn) {
     selectedMeal = name;
@@ -267,69 +300,177 @@
     document.getElementById('tab-' + tab).classList.add('active');
   }
 
+  // ─── Weekly Chart ─────────────────────────────────────────────
+  function renderChart() {
+    const svg = document.getElementById('weekChart');
+    const W = 360, H = 160;
+    const padL = 38, padR = 12, padT = 18, padB = 30;
+    const chartW = W - padL - padR;
+    const chartH = H - padT - padB;
+
+    // Collect last 7 days (oldest → newest)
+    const days = [];
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      days.push({ date: d, total: getDayTotal(d) });
+    }
+
+    const maxVal = Math.max(...days.map(d => d.total), goal * 1.3, 500);
+    // Round up to nice number
+    const yMax = Math.ceil(maxVal / 500) * 500;
+
+    function toX(i) { return padL + (i / 6) * chartW; }
+    function toY(v) { return padT + chartH - (v / yMax) * chartH; }
+
+    const goalY = toY(goal);
+
+    let html = '';
+
+    // Grid lines
+    const steps = 4;
+    for (let i = 0; i <= steps; i++) {
+      const v = Math.round((yMax / steps) * i);
+      const y = toY(v);
+      html += `<line x1="${padL}" y1="${y}" x2="${W - padR}" y2="${y}" stroke="#F2E8DC0f" stroke-width="1"/>`;
+      html += `<text x="${padL - 4}" y="${y + 4}" text-anchor="end" font-size="9" fill="#F2E8DC44">${v >= 1000 ? (v/1000).toFixed(1)+'k' : v}</text>`;
+    }
+
+    // Goal line (dashed)
+    html += `<line x1="${padL}" y1="${goalY}" x2="${W - padR}" y2="${goalY}" stroke="#B89A6A" stroke-width="1.5" stroke-dasharray="5,4" opacity="0.6"/>`;
+    html += `<text x="${W - padR + 2}" y="${goalY + 4}" font-size="8" fill="#B89A6A99">cieľ</text>`;
+
+    // Area fill under line
+    const hasData = days.some(d => d.total > 0);
+    if (hasData) {
+      let areaPath = `M ${toX(0)} ${toY(days[0].total)}`;
+      for (let i = 1; i < days.length; i++) {
+        // Smooth curve
+        const x0 = toX(i - 1), y0 = toY(days[i-1].total);
+        const x1 = toX(i), y1 = toY(days[i].total);
+        const cx = (x0 + x1) / 2;
+        areaPath += ` C ${cx} ${y0}, ${cx} ${y1}, ${x1} ${y1}`;
+      }
+      const closedArea = areaPath + ` L ${toX(6)} ${padT + chartH} L ${toX(0)} ${padT + chartH} Z`;
+      html += `<defs>
+        <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#B89A6A" stop-opacity="0.25"/>
+          <stop offset="100%" stop-color="#B89A6A" stop-opacity="0.02"/>
+        </linearGradient>
+      </defs>`;
+      html += `<path d="${closedArea}" fill="url(#areaGrad)"/>`;
+
+      // Line
+      let linePath = `M ${toX(0)} ${toY(days[0].total)}`;
+      for (let i = 1; i < days.length; i++) {
+        const x0 = toX(i - 1), y0 = toY(days[i-1].total);
+        const x1 = toX(i), y1 = toY(days[i].total);
+        const cx = (x0 + x1) / 2;
+        linePath += ` C ${cx} ${y0}, ${cx} ${y1}, ${x1} ${y1}`;
+      }
+      html += `<path d="${linePath}" fill="none" stroke="#B89A6A" stroke-width="2" opacity="0.7"/>`;
+    }
+
+    // Days of week labels + dots + interactive areas
+    const dayNames = ['Ne','Po','Ut','St','Št','Pi','So'];
+    days.forEach((d, i) => {
+      const x = toX(i);
+      const y = toY(d.total);
+      const dayName = dayNames[d.date.getDay()];
+      const isToday = dateKey(d.date) === dateKey(new Date());
+      const isOver = d.total > goal;
+      const hasEntry = d.total > 0;
+      const dotColor = isOver ? '#D4879A' : '#B89A6A';
+
+      // X axis label
+      html += `<text x="${x}" y="${H - 4}" text-anchor="middle" font-size="9.5" fill="${isToday ? '#B89A6A' : '#F2E8DC55'}" font-weight="${isToday ? '700' : '400'}">${dayName}</text>`;
+
+      if (hasEntry) {
+        // Dot glow
+        html += `<circle cx="${x}" cy="${y}" r="6" fill="${dotColor}" opacity="0.15"/>`;
+        // Dot
+        html += `<circle cx="${x}" cy="${y}" r="4" fill="${dotColor}" stroke="#1a1410" stroke-width="1.5"/>`;
+        // Over-goal marker
+        if (isOver) {
+          html += `<text x="${x}" y="${y - 9}" text-anchor="middle" font-size="8" fill="#D4879A">▲</text>`;
+        }
+      } else {
+        // Empty day dot
+        html += `<circle cx="${x}" cy="${toY(0) - 2}" r="2.5" fill="#F2E8DC22"/>`;
+      }
+
+      // Invisible hit area for tooltip
+      const kcalLabel = hasEntry ? `${d.total} kcal` : 'bez záznamu';
+      const dateLabel = d.date.toLocaleDateString('sk-SK', { day: 'numeric', month: 'numeric' });
+      html += `<rect x="${x - 20}" y="${padT}" width="40" height="${chartH + 4}" fill="transparent" 
+        onmouseover="showTooltip(event,'${dayName} ${dateLabel}','${kcalLabel}',${isOver})"
+        ontouchstart="showTooltip(event,'${dayName} ${dateLabel}','${kcalLabel}',${isOver})"
+        onmouseout="hideTooltip()" ontouchend="hideTooltip()" style="cursor:pointer"/>`;
+    });
+
+    svg.innerHTML = html;
+  }
+
+  function showTooltip(e, day, kcal, isOver) {
+    const tip = document.getElementById('chartTooltip');
+    const wrap = document.getElementById('chartWrap');
+    const rect = wrap.getBoundingClientRect();
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    tip.innerHTML = `<span style="color:#B89A6A;font-weight:600">${day}</span><br>${kcal}${isOver ? ' <span style="color:#D4879A">▲ nad cieľom</span>' : ''}`;
+    tip.style.display = 'block';
+    let left = clientX - rect.left + 10;
+    if (left + 120 > rect.width) left = clientX - rect.left - 120;
+    tip.style.left = left + 'px';
+    tip.style.top = (clientY - rect.top - 50) + 'px';
+  }
+
+  function hideTooltip() {
+    document.getElementById('chartTooltip').style.display = 'none';
+  }
+
   // ─── Barcode ──────────────────────────────────────────────────
   async function toggleScanner() {
-    if (scannerActive) {
-      await stopScanner();
-    } else {
-      await startScanner();
-    }
+    if (scannerActive) { await stopScanner(); } else { await startScanner(); }
   }
 
   async function startScanner() {
     const statusEl = document.getElementById('barcodeStatus');
     const readerEl = document.getElementById('qr-reader');
     const btn = document.getElementById('scanToggleBtn');
-    const btnText = document.getElementById('scanBtnText');
-
     statusEl.textContent = 'Spúšťam kameru...';
     statusEl.className = 'barcode-status loading';
-
     try {
       html5QrCode = new Html5Qrcode('qr-reader');
       readerEl.classList.add('visible');
       btn.classList.add('scanning');
-      btnText.textContent = 'Zastaviť kameru';
-      scannerActive = true;
-      lastScanned = null;
-
+      document.getElementById('scanBtnText').textContent = 'Zastaviť kameru';
+      scannerActive = true; lastScanned = null;
       await html5QrCode.start(
         { facingMode: 'environment' },
-        {
-          fps: 10,
-          qrbox: { width: 250, height: 120 },
-          aspectRatio: 1.5,
+        { fps: 10, qrbox: { width: 250, height: 120 }, aspectRatio: 1.5,
           formatsToSupport: [
-            Html5QrcodeSupportedFormats.EAN_13,
-            Html5QrcodeSupportedFormats.EAN_8,
-            Html5QrcodeSupportedFormats.CODE_128,
-            Html5QrcodeSupportedFormats.CODE_39,
-            Html5QrcodeSupportedFormats.UPC_A,
-            Html5QrcodeSupportedFormats.UPC_E,
+            Html5QrcodeSupportedFormats.EAN_13, Html5QrcodeSupportedFormats.EAN_8,
+            Html5QrcodeSupportedFormats.CODE_128, Html5QrcodeSupportedFormats.CODE_39,
+            Html5QrcodeSupportedFormats.UPC_A, Html5QrcodeSupportedFormats.UPC_E
           ]
         },
-        async (decodedText) => {
-          if (decodedText === lastScanned) return;
-          lastScanned = decodedText;
+        async (decoded) => {
+          if (decoded === lastScanned) return;
+          lastScanned = decoded;
           await stopScanner();
-          await lookupBarcode(decodedText);
+          await lookupBarcode(decoded);
         },
-        () => {} // ignore errors during scanning
+        () => {}
       );
-
       statusEl.textContent = 'Namieriť na čiarový kód produktu';
       statusEl.className = 'barcode-status';
-
     } catch (e) {
       scannerActive = false;
       readerEl.classList.remove('visible');
       btn.classList.remove('scanning');
-      btnText.textContent = 'Spustiť kameru';
-      if (e.toString().includes('NotAllowed') || e.toString().includes('Permission')) {
-        statusEl.textContent = '⚠️ Prístup ku kamere zamietnutý. Povoľ kameru v nastaveniach prehliadača.';
-      } else {
-        statusEl.textContent = '⚠️ Kamera nie je dostupná. Skús záložku Hľadať.';
-      }
+      document.getElementById('scanBtnText').textContent = 'Spustiť kameru';
+      statusEl.textContent = e.toString().includes('NotAllowed') ? '⚠️ Prístup ku kamere zamietnutý.' : '⚠️ Kamera nie je dostupná. Skús záložku Hľadať.';
       statusEl.className = 'barcode-status error';
     }
   }
@@ -348,44 +489,34 @@
 
   async function lookupBarcode(barcode) {
     const statusEl = document.getElementById('barcodeStatus');
-    statusEl.textContent = `🔍 Hľadám produkt...`;
+    statusEl.textContent = '🔍 Hľadám produkt...';
     statusEl.className = 'barcode-status loading';
-
     try {
       const res = await fetch(`https://world.openfoodfacts.org/api/v0/product/${barcode}.json`);
       const data = await res.json();
-
       if (data.status !== 1 || !data.product) {
-        statusEl.textContent = `❌ Produkt nebol nájdený v databáze.`;
-        statusEl.className = 'barcode-status error';
-        return;
+        statusEl.textContent = '❌ Produkt nebol nájdený v databáze.';
+        statusEl.className = 'barcode-status error'; return;
       }
-
-      const p = data.product;
-      const n = p.nutriments || {};
+      const p = data.product, n = p.nutriments || {};
       const kcal100 = Math.round(n['energy-kcal_100g'] || n['energy-kcal'] || 0);
       const name = p.product_name_sk || p.product_name_cs || p.product_name || 'Neznámy produkt';
       const brand = p.brands ? p.brands.split(',')[0].trim() : '';
-
       if (!kcal100) {
-        statusEl.textContent = `⚠️ "${name}" nemá údaje o kalóriách v databáze.`;
-        statusEl.className = 'barcode-status error';
-        return;
+        statusEl.textContent = `⚠️ "${name}" nemá údaje o kalóriách.`;
+        statusEl.className = 'barcode-status error'; return;
       }
-
       selectedBarcodeProduct = { name, brand, kcalPer100: kcal100 };
       statusEl.textContent = `✅ ${name}${brand ? ' · ' + brand : ''}`;
       statusEl.className = 'barcode-status success';
-
       document.getElementById('gramLabelBarcode').textContent = name + (brand ? ` (${brand})` : '');
       document.getElementById('gramKcalPerBarcode').textContent = `${kcal100} kcal / 100 g`;
       document.getElementById('gramRowBarcode').classList.add('visible');
       document.getElementById('gramInputBarcode').value = 100;
       document.getElementById('addBarcodeBtn').disabled = false;
       updateGramPreviewBarcode();
-
     } catch (e) {
-      statusEl.textContent = '❌ Chyba pripojenia. Skontroluj internet.';
+      statusEl.textContent = '❌ Chyba pripojenia.';
       statusEl.className = 'barcode-status error';
     }
   }
@@ -404,11 +535,10 @@
     const entries = getEntries(currentDate);
     entries.push({ id: Date.now(), meal: selectedMeal, name: selectedBarcodeProduct.name, sub: `${g} g`, kcal });
     saveEntries(currentDate, entries);
-    selectedBarcodeProduct = null;
-    lastScanned = null;
+    selectedBarcodeProduct = null; lastScanned = null;
     document.getElementById('gramRowBarcode').classList.remove('visible');
     document.getElementById('addBarcodeBtn').disabled = true;
-    document.getElementById('barcodeStatus').textContent = '✅ Pridané do denníka!';
+    document.getElementById('barcodeStatus').textContent = '✅ Pridané!';
     document.getElementById('barcodeStatus').className = 'barcode-status success';
     setTimeout(() => { document.getElementById('barcodeStatus').textContent = ''; }, 2000);
     render();
@@ -433,21 +563,29 @@
 
   async function doSearch(query) {
     try {
+      // Try primary API first
       const url = `https://world.openfoodfacts.org/cgi/search.pl?search_terms=${encodeURIComponent(query)}&search_simple=1&action=process&json=1&page_size=10&fields=product_name,brands,nutriments`;
-      const res = await fetch(url);
+      const res = await fetch(url, { mode: 'cors', headers: { 'Accept': 'application/json' } });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
       const data = await res.json();
-      showSpinner(false);
-      renderResults(data.products || []);
+      showSpinner(false); renderResults(data.products || []);
     } catch (e) {
-      showSpinner(false);
-      renderResults(null);
+      // Fallback: v2 API
+      try {
+        const url2 = `https://world.openfoodfacts.org/api/v2/search?search_terms=${encodeURIComponent(query)}&fields=product_name,brands,nutriments&page_size=10`;
+        const res2 = await fetch(url2);
+        const data2 = await res2.json();
+        showSpinner(false); renderResults(data2.products || []);
+      } catch (e2) {
+        showSpinner(false); renderResults(null);
+      }
     }
   }
 
   function renderResults(products) {
     const box = document.getElementById('searchResults');
     box.classList.add('visible');
-    if (!products) { box.innerHTML = '<div class="no-results">Chyba pripojenia. Skús znova.</div>'; return; }
+    if (!products) { box.innerHTML = '<div class="no-results"> Vyhľadávanie nedostupné. Skús záložku ✏️ Ručne.</div>'; return; }
     const valid = products.filter(p => p.product_name && p.nutriments && p.nutriments['energy-kcal_100g']);
     if (!valid.length) { box.innerHTML = '<div class="no-results">Nič sa nenašlo. Skús iný výraz alebo zadaj ručne.</div>'; return; }
     box.innerHTML = valid.slice(0, 6).map(p => {
@@ -499,15 +637,28 @@
   }
 
   // ─── Manual ───────────────────────────────────────────────────
+  function updateManualPreview() {
+    const kcalPerUnit = parseFloat(document.getElementById('foodKcal').value) || 0;
+    const qty = parseFloat(document.getElementById('foodQty').value) || 1;
+    const total = Math.round(kcalPerUnit * qty);
+    document.getElementById('manualPreview').textContent = kcalPerUnit > 0 ? total + ' kcal' : '—';
+  }
+
   function addManual() {
     const name = document.getElementById('foodName').value.trim();
-    const kcal = parseInt(document.getElementById('foodKcal').value);
-    if (!name || isNaN(kcal) || kcal < 0) return;
+    const kcalPerUnit = parseFloat(document.getElementById('foodKcal').value);
+    const qty = parseFloat(document.getElementById('foodQty').value) || 1;
+    const unit = document.getElementById('foodUnit').value;
+    if (!name || isNaN(kcalPerUnit) || kcalPerUnit < 0) return;
+    const totalKcal = Math.round(kcalPerUnit * qty);
+    const sub = (qty % 1 === 0 ? qty : qty.toFixed(1)) + ' ' + unit;
     const entries = getEntries(currentDate);
-    entries.push({ id: Date.now(), meal: selectedMeal, name, kcal });
+    entries.push({ id: Date.now(), meal: selectedMeal, name, sub, kcal: totalKcal });
     saveEntries(currentDate, entries);
     document.getElementById('foodName').value = '';
     document.getElementById('foodKcal').value = '';
+    document.getElementById('foodQty').value = '1';
+    document.getElementById('manualPreview').textContent = '—';
     render();
   }
 
@@ -526,6 +677,9 @@
     const pct = Math.min((total / goal) * 100, 100);
     document.getElementById('progressBar').style.width = pct + '%';
     document.getElementById('progressBar').style.background = pct > 100 ? '#D4879A' : 'linear-gradient(90deg, #B89A6A, #c8aa7a)';
+
+    renderChart();
+
     const mealOrder = ['Raňajky', 'Obed', 'Večera', 'Snack'];
     const grouped = {}; mealOrder.forEach(m => { grouped[m] = []; });
     entries.forEach(e => { if (grouped[e.meal]) grouped[e.meal].push(e); });
